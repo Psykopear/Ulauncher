@@ -1,31 +1,39 @@
 #!/usr/bin/env bash
 
-. scripts/common.sh
-. scripts/help.sh
-. scripts/init-dev-env.sh
-. scripts/cleanup-dev-env.sh
-. scripts/rm-python-cache.sh
-. scripts/tests.sh
-. scripts/dev-container.sh
-. scripts/build-deb.sh
-. scripts/build-rpm.sh
-. scripts/build-targz.sh
-. scripts/create-build-images.sh
-. scripts/build-doc.sh
-. scripts/build-preferences.sh
-. scripts/make-release.sh
-. scripts/send-signal.sh
-. scripts/travis-cli-container.sh
-. scripts/run-ci.sh
-. scripts/watch-doc.sh
-. scripts/edit-ui.sh
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+  DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+done
+DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
+
+. $DIR/scripts/common.sh
+. $DIR/scripts/help.sh
+. $DIR/scripts/init-dev-env.sh
+. $DIR/scripts/cleanup-dev-env.sh
+. $DIR/scripts/rm-python-cache.sh
+. $DIR/scripts/tests.sh
+. $DIR/scripts/dev-container.sh
+. $DIR/scripts/build-deb.sh
+. $DIR/scripts/build-rpm.sh
+. $DIR/scripts/build-targz.sh
+. $DIR/scripts/create-build-images.sh
+. $DIR/scripts/build-doc.sh
+. $DIR/scripts/build-preferences.sh
+. $DIR/scripts/make-release.sh
+. $DIR/scripts/send-signal.sh
+. $DIR/scripts/travis-cli-container.sh
+. $DIR/scripts/run-ci.sh
+. $DIR/scripts/watch-doc.sh
+. $DIR/scripts/edit-ui.sh
 
 
 main () {
   case "$1" in
     init-dev-env) init-dev-env ;;
     cleanup-dev-env) cleanup-dev-env ;;
-    run) exec ./bin/ulauncher -v --dev $2 ;;
+    run) exec $DIR/bin/ulauncher -v --dev $2 ;;
     rm-python-cache) rm-python-cache ;;
     test-mypy) warn-if-not-in-docker && test-mypy ;;
     test-pylint) warn-if-not-in-docker && test-pylint ;;
@@ -38,7 +46,7 @@ main () {
     build-deb) build-deb $2 $3 ;;
     build-rpm) build-rpm $2 $3 $4 ;;
     build-targz) build-targz $2 ;;
-    aur-update) ./scripts/aur-update.py $2 ;;
+    aur-update) $DIR/scripts/aur-update.py $2 ;;
     create-build-images) create-build-images ;;
     build-doc) build-doc ;;
     build-preferences) build-preferences $2 ;;
